@@ -25,11 +25,15 @@ public:
     double getRate() const override { return rate_; }
     void setRate(double rate) override { rate_ = rate; }
     
+    void setTradeType(const std::string& tradetype) override { tradeType_ = tradetype; }
     std::string getTradeType() const override = 0;
+
+    void setTradeId(const std::string& id) override { tradeId_ = id; }
     std::string getTradeId() const override { return tradeId_; }
     
 protected:
     std::string tradeId_;
+    std::string tradeType_;
     
 private:
     std::chrono::system_clock::time_point tradeDate_;

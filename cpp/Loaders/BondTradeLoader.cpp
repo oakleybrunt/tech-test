@@ -5,6 +5,7 @@
 #include <ctime>
 #include <iomanip>
 #include <chrono>
+#include <iostream>
 
 BondTrade* BondTradeLoader::createTradeFromLine(std::string line) {
     std::vector<std::string> items;
@@ -12,7 +13,11 @@ BondTrade* BondTradeLoader::createTradeFromLine(std::string line) {
     std::string item;
     
     while (std::getline(ss, item, separator)) {
+        if (!item.empty() && item.back() == '\r') {
+        item.pop_back();
+    }
         items.push_back(item);
+
     }
     
     if (items.size() < 7) {
@@ -26,7 +31,7 @@ BondTrade* BondTradeLoader::createTradeFromLine(std::string line) {
     dateStream >> std::get_time(&tm, "%Y-%m-%d");
     auto timePoint = std::chrono::system_clock::from_time_t(std::mktime(&tm));
     trade->setTradeDate(timePoint);
-    
+    trade->setTradeType(items[0]);
     trade->setInstrument(items[2]);
     trade->setCounterparty(items[3]);
     trade->setNotional(std::stod(items[4]));

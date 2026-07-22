@@ -23,8 +23,11 @@ public:
     
     virtual double getRate() const = 0;
     virtual void setRate(double rate) = 0;
-    
+
+    virtual void setTradeType(const std::string& tradetype) = 0;
     virtual std::string getTradeType() const = 0;
+
+    virtual void setTradeId(const std::string& id) = 0;
     virtual std::string getTradeId() const = 0;
 };
 
