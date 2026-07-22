@@ -1,5 +1,14 @@
 #include "SerialPricer.h"
+#include "../Pricers/GovBondPricingEngine.h"
+#include "../Pricers/CorpBondPricingEngine.h"
+#include "../Pricers/FxPricingEngine.h"
 #include <stdexcept>
+
+std::map<std::string, std::function<std::unique_ptr<IPricingEngine>()>> engineRegistry {
+    { "FxPricingEngine", [] { return std::make_unique<FxPricingEngine>(); } },
+    { "CorpBondPricingEngine", [] { return std::make_unique<CorpBondPricingEngine>(); } },
+    { "GovBondPricingEngine", [] { return std::make_unique<GovBondPricingEngine>(); } },
+};
 
 SerialPricer::~SerialPricer() {
 
@@ -11,7 +20,27 @@ void SerialPricer::loadPricers() {
     PricingEngineConfig pricerConfig = pricingConfigLoader.loadConfig();
     
     for (const auto& configItem : pricerConfig) {
-        throw std::runtime_error("Not implemented");
+        std::string engineName;
+        size_t pos = configItem.getTypeName().rfind('.');
+        
+        // Try to split pricingEngine by last '.'
+        if (pos == std::string::npos) {
+            // If no '.' just return typeName
+            engineName = configItem.getTypeName();
+        } else {
+            // return substring after last '.'
+            engineName = configItem.getTypeName().substr(pos + 1);
+        }
+        
+        // Look up pricingEngine in registry and return instance
+        auto instance = engineRegistry.find(engineName);
+        if (instance == engineRegistry.end()) {
+            throw std::runtime_error("Unknown pricing engine: " + configItem.getTypeName());
+        }
+
+        // Release unique_ptr and return a raw pointer
+        IPricingEngine* rawPtr = instance->second().release();
+        pricers_.insert({configItem.getTradeType(), rawPtr});
     }
 }
 
