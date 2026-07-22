@@ -10,10 +10,10 @@ public:
     static constexpr const char* FxSpotTradeType = "FxSpot";
     static constexpr const char* FxForwardTradeType = "FxFwd";
     
-    FxTrade(const std::string& tradeId = "", const std::string& tradeType = FxSpotTradeType)
-        : tradeType_(tradeType) {
+    FxTrade(const std::string& tradeId = "", const std::string& tradeType = FxSpotTradeType) {
         if (!tradeId.empty()) {
             tradeId_ = tradeId;
+            tradeType_ = tradeType;
         }
     }
     
@@ -25,7 +25,6 @@ public:
     void setValueDate(const std::chrono::system_clock::time_point& date) { valueDate_ = date; }
     
 private:
-    std::string tradeType_;
     std::chrono::system_clock::time_point valueDate_;
 };
 
