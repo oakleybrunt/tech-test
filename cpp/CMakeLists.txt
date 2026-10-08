@@ -4,6 +4,8 @@ project(TechTest)
 # Default to C++17, but candidates may change to 20 or 23 if preferred
 set(CMAKE_CXX_STANDARD 17)
 
+find_package(pugixml REQUIRED)
+
 # Models library
 # Make Models a static library so translation-unit implementations
 # (e.g. ScalarResults.cpp) are compiled and linked.
@@ -21,9 +23,8 @@ add_library(Loaders
     Loaders/FxTradeLoader.h
     Loaders/FxTradeLoader.cpp
 )
-
 target_include_directories(Loaders PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(Loaders Models)
+target_link_libraries(Loaders PUBLIC Models pugixml::pugixml)
 
 # Pricers library
 add_library(Pricers
@@ -83,4 +84,3 @@ file(COPY ${CMAKE_SOURCE_DIR}/Loaders/TradeData DESTINATION ${CMAKE_BINARY_DIR})
 file(COPY ${CMAKE_SOURCE_DIR}/Loaders/TradeData DESTINATION ${CMAKE_BINARY_DIR}/Loaders)
 file(COPY ${CMAKE_SOURCE_DIR}/RiskSystem/PricingConfig DESTINATION ${CMAKE_BINARY_DIR})
 file(COPY ${CMAKE_SOURCE_DIR}/RiskSystem/PricingConfig DESTINATION ${CMAKE_BINARY_DIR}/RiskSystem)
-
