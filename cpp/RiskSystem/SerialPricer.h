@@ -2,22 +2,23 @@
 #define SERIALPRICER_H
 
 #include "../Models/IPricingEngine.h"
-#include "../Models/ITrade.h"
 #include "../Models/IScalarResultReceiver.h"
+#include "../Models/ITrade.h"
 #include "PricingConfigLoader.h"
 #include <map>
-#include <vector>
 #include <string>
+#include <vector>
 
 class SerialPricer {
 private:
-    std::map<std::string, IPricingEngine*> pricers_;
-    void loadPricers();
-    
+  std::map<std::string, IPricingEngine *> pricers_;
+  void loadPricers();
+
 public:
-    ~SerialPricer();
-    void price(const std::vector<std::vector<ITrade*>>& tradeContainers, 
-               IScalarResultReceiver* resultReceiver);
+  ~SerialPricer();
+  void price(
+      const std::vector<std::vector<std::unique_ptr<ITrade>>> &tradeContainers,
+      IScalarResultReceiver *resultReceiver);
 };
 
 #endif // SERIALPRICER_H

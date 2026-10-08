@@ -5,9 +5,8 @@
 
 class ITradeReceiver {
 public:
-    virtual ~ITradeReceiver() = default;
-    virtual void add(ITrade* trade) = 0;
+  virtual ~ITradeReceiver() = default;
+  virtual void add(std::unique_ptr<ITrade> trade) = 0;
 };
 
 #endif // ITRADERECEIVER_H
-

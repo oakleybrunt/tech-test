@@ -7,7 +7,8 @@
 #include <sstream>
 #include <stdexcept>
 
-BondTrade *BondTradeLoader::createTradeFromLine(std::string line) {
+std::unique_ptr<BondTrade>
+BondTradeLoader::createTradeFromLine(std::string line) {
   std::vector<std::string> items;
   std::stringstream ss(line);
   std::string item;
@@ -21,7 +22,8 @@ BondTrade *BondTradeLoader::createTradeFromLine(std::string line) {
     throw std::runtime_error("Invalid line format");
   }
 
-  BondTrade *trade = new BondTrade(items[6], items[0]);
+  std::unique_ptr<BondTrade> trade =
+      std::make_unique<BondTrade>(items[6], items[0]);
 
   std::tm tm = {};
   std::istringstream dateStream(items[1]);
@@ -59,13 +61,13 @@ void BondTradeLoader::loadTradesFromFile(std::string filename,
   }
 }
 
-std::vector<ITrade *> BondTradeLoader::loadTrades() {
+std::vector<std::unique_ptr<ITrade>> BondTradeLoader::loadTrades() {
   BondTradeList tradeList;
   loadTradesFromFile(dataFile_, tradeList);
 
-  std::vector<ITrade *> result;
-  for (size_t i = 0; i < tradeList.size(); ++i) {
-    result.push_back(tradeList[i]);
+  std::vector<std::unique_ptr<ITrade>> result;
+  for (auto &trade : tradeList) {
+    result.push_back(std::move(trade));
   }
   return result;
 }
