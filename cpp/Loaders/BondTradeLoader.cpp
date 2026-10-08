@@ -14,7 +14,7 @@ BondTradeLoader::createTradeFromLine(std::string line) {
   std::string item;
 
   while (std::getline(ss, item, separator)) {
-    rm_nonprinting(item);
+    rm_cntrlchars(item);
     items.push_back(item);
   }
 
