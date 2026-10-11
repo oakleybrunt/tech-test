@@ -1,3 +1,4 @@
+```
 Process:         ConsoleApp [38563]
 Path:            /Users/USER/Documents/*/ConsoleApp
 Load Address:    0x1002f0000
@@ -22,3 +23,4 @@ Idle exit:                  untracked
 leaks Report Version: 4.0, multi-line stacks
 Process 38563: 217 nodes malloced for 44 KB
 Process 38563: 0 leaks for 0 total leaked bytes.
+```
