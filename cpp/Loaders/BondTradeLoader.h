@@ -14,7 +14,8 @@ private:
   std::string dataFile_;
 
   std::unique_ptr<BondTrade> createTradeFromLine(std::string line);
-  void loadTradesFromFile(std::string filename, BondTradeList &tradeList);
+  void streamTrades(ITradeReceiver &receiver) override;
+  void loadTradesFromFile(std::string filename, ITradeReceiver &tradeList);
 
 public:
   std::vector<std::unique_ptr<ITrade>> loadTrades() override;

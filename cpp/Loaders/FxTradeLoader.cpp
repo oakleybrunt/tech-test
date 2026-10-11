@@ -45,7 +45,7 @@ std::unique_ptr<FxTrade> FxTradeLoader::createTradeFromLine(std::string line) {
 }
 
 void FxTradeLoader::loadTradesFromFile(std::string filename,
-                                       FxTradeList &tradeList) {
+                                       ITradeReceiver &tradeList) {
   if (filename.empty()) {
     throw std::invalid_argument("Filename cannot be null");
   }
@@ -76,6 +76,10 @@ std::vector<std::unique_ptr<ITrade>> FxTradeLoader::loadTrades() {
     result.push_back(std::move(trade));
   }
   return result;
+}
+
+void FxTradeLoader::streamTrades(ITradeReceiver &receiver) {
+  loadTradesFromFile(dataFile_, receiver);
 }
 
 std::string FxTradeLoader::getDataFile() const { return dataFile_; }

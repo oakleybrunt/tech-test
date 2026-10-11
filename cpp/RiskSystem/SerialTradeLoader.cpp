@@ -1,17 +1,20 @@
 #include "SerialTradeLoader.h"
 #include "../Loaders/BondTradeLoader.h"
 #include "../Loaders/FxTradeLoader.h"
+#include <memory>
 
-std::vector<ITradeLoader *> SerialTradeLoader::getTradeLoaders() {
-  std::vector<ITradeLoader *> loaders;
+std::vector<std::unique_ptr<ITradeLoader>>
+SerialTradeLoader::getTradeLoaders() {
+  std::vector<std::unique_ptr<ITradeLoader>> loaders;
 
-  BondTradeLoader *bondLoader = new BondTradeLoader();
+  std::unique_ptr<BondTradeLoader> bondLoader =
+      std::make_unique<BondTradeLoader>();
   bondLoader->setDataFile("TradeData/BondTrades.dat");
-  loaders.push_back(bondLoader);
+  loaders.push_back(std::move(bondLoader));
 
-  FxTradeLoader *fxLoader = new FxTradeLoader();
+  std::unique_ptr<FxTradeLoader> fxLoader = std::make_unique<FxTradeLoader>();
   fxLoader->setDataFile("TradeData/FxTrades.dat");
-  loaders.push_back(fxLoader);
+  loaders.push_back(std::move(fxLoader));
 
   return loaders;
 }

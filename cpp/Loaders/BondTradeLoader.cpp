@@ -40,7 +40,7 @@ BondTradeLoader::createTradeFromLine(std::string line) {
 }
 
 void BondTradeLoader::loadTradesFromFile(std::string filename,
-                                         BondTradeList &tradeList) {
+                                         ITradeReceiver &tradeList) {
   if (filename.empty()) {
     throw std::invalid_argument("Filename cannot be null");
   }
@@ -70,6 +70,10 @@ std::vector<std::unique_ptr<ITrade>> BondTradeLoader::loadTrades() {
     result.push_back(std::move(trade));
   }
   return result;
+}
+
+void BondTradeLoader::streamTrades(ITradeReceiver &receiver) {
+  loadTradesFromFile(dataFile_, receiver);
 }
 
 std::string BondTradeLoader::getDataFile() const { return dataFile_; }

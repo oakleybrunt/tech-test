@@ -16,7 +16,8 @@ public:
   std::vector<std::unique_ptr<ITrade>> loadTrades() override;
   std::string getDataFile() const override;
   void setDataFile(const std::string &file) override;
-  void loadTradesFromFile(std::string filename, FxTradeList &tradeList);
+  void streamTrades(ITradeReceiver &receiver) override;
+  void loadTradesFromFile(std::string filename, ITradeReceiver &tradeList);
   std::unique_ptr<FxTrade> createTradeFromLine(std::string line);
 };
 
