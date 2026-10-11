@@ -15,6 +15,11 @@ PricingEngineConfig PricingConfigLoader::loadConfig() {
   pugi::xml_document doc;
   pugi::xml_parse_result result = doc.load_file(configFile_.c_str());
 
+  if (!result) {
+    throw std::runtime_error("Failed to load " + configFile_ + ": " +
+                             result.description());
+  }
+
   // then for each entry create a PricingConfigItem
   pugi::xml_node root = doc.child("PricingEngines");
   for (pugi::xml_node engine : root.children("Engine")) {
@@ -22,7 +27,7 @@ PricingEngineConfig PricingConfigLoader::loadConfig() {
     item.setTradeType(engine.attribute("tradeType").as_string());
     item.setAssembly(engine.attribute("assembly").as_string());
     item.setTypeName(engine.attribute("pricingEngine").as_string());
-    config.push_back(item);
+    config.push_back(std::move(item));
   }
 
   return config;
