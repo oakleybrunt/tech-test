@@ -6,7 +6,7 @@
 class CorpBondPricingEngine : public BasePricingEngine {
 public:
   CorpBondPricingEngine() {
-    setDelay(800);
+    setDelay(8000);
     addSupportedTradeType("CorpBond");
   }
 };

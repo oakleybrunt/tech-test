@@ -6,7 +6,7 @@
 class FxPricingEngine : public BasePricingEngine {
 public:
   FxPricingEngine() {
-    setDelay(200);
+    setDelay(2000);
     addSupportedTradeType("FxSpot");
     addSupportedTradeType("FxFwd");
   }
