@@ -5,12 +5,11 @@
 
 class FxPricingEngine : public BasePricingEngine {
 public:
-    FxPricingEngine() {
-        setDelay(2000);
-        addSupportedTradeType("FxSpot");
-        addSupportedTradeType("FxFwd");
-    }
+  FxPricingEngine() {
+    setDelay(200);
+    addSupportedTradeType("FxSpot");
+    addSupportedTradeType("FxFwd");
+  }
 };
 
 #endif // FXPRICINGENGINE_H
-
