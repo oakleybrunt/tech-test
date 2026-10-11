@@ -21,6 +21,8 @@ public:
   virtual void addError(const std::string &tradeId,
                         const std::string &error) override;
 
+  void buildItems() const;
+
   class Iterator {
   public:
     using iterator_category = std::forward_iterator_tag;
@@ -29,25 +31,25 @@ public:
     using pointer = ScalarResult *;
     using reference = ScalarResult &;
 
-    using Inner = std::vector<ScalarResult>::const_iterator;
+    using ResultsIt = std::map<std::string, double>::const_iterator;
+    using ErrorsIt = std::map<std::string, std::string>::const_iterator;
 
     Iterator() = default;
-    explicit Iterator(Inner it) : it_(it) {};
+    explicit Iterator(ResultsIt rIt, ResultsIt rEnd, ErrorsIt eIt,
+                      ErrorsIt eEnd)
+        : rIt_(rIt), rEnd_(rEnd), eIt_(eIt), eEnd_(eEnd) {}
 
     // Iterator must be constructable from ScalarResults parent
-    // Move to next item in list
-    Iterator &operator++() {
-      ++it_;
-      return *this;
-    };
-    // Return current item
-    ScalarResult operator*() const { return *it_; };
-
-    // Check equality
-    bool operator!=(const Iterator &other) const { return it_ != other.it_; };
+    Iterator &operator++();
+    ScalarResult operator*() const;
+    bool operator!=(const Iterator &other) const;
 
   private:
-    Inner it_;
+    bool iterateResults() const;
+    bool iterateErrors() const;
+
+    ResultsIt rIt_, rEnd_;
+    ErrorsIt eIt_, eEnd_;
   };
 
   Iterator begin() const;
@@ -56,8 +58,6 @@ public:
 private:
   std::map<std::string, double> results_;
   std::map<std::string, std::string> errors_;
-  // Constructable list of ScalarResult items
-  mutable std::vector<ScalarResult> items_;
 };
 
 #endif // SCALARRESULTS_H

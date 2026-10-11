@@ -40,34 +40,59 @@ void ScalarResults::addError(const std::string &tradeId,
   errors_[tradeId] = error;
 }
 
+// Both maps are sorted (not unorderd_map) by tradeId. The current trade is
+// whichever iterator is on the smalled ID. If both are on the same ID, the
+// trade is found in both maps (has both result and error)
+
+// True if results_ still has items _and_ its ID is the smallest (or tied)
+bool ScalarResults::Iterator::iterateResults() const {
+  return rIt_ != rEnd_ && (eIt_ == eEnd_ || rIt_->first <= eIt_->first);
+}
+
+// True if errors_ still has items _and_ its ID is the smallest (or tied)
+bool ScalarResults::Iterator::iterateErrors() const {
+  return eIt_ != eEnd_ && (rIt_ == rEnd_ || eIt_->first <= rIt_->first);
+}
+
+ScalarResults::Iterator &ScalarResults::Iterator::operator++() {
+  const bool itR = iterateResults();
+  const bool itE = iterateErrors();
+
+  if (itR)
+    ++rIt_;
+  if (itE)
+    ++eIt_;
+  return *this;
+}
+
+ScalarResult ScalarResults::Iterator::operator*() const {
+  const bool itR = iterateResults();
+  const bool itE = iterateErrors();
+
+  // If results_ is next to be iterated return that tradeId, otherwise return
+  // the current tradeId from the errors_ map
+  const std::string &tradeId = itR ? rIt_->first : eIt_->first;
+
+  std::optional<double> result = std::nullopt;
+  std::optional<std::string> error = std::nullopt;
+
+  if (itR)
+    result = rIt_->second;
+  if (itE)
+    error = eIt_->second;
+
+  return ScalarResult(tradeId, result, error);
+}
+
+bool ScalarResults::Iterator::operator!=(const Iterator &other) const {
+  return rIt_ != other.rIt_ || eIt_ != other.eIt_;
+}
+
 ScalarResults::Iterator ScalarResults::begin() const {
-  // Start by constructing items_
-  // 1. reset items_ to avoid returning stale results or missing new ones
-  items_.clear();
-
-  // 2. Populate items_ with ScalarResult objects that have a result. May not
-  // have an error.
-  for (const auto &result : results_) {
-    std::optional<std::string> error = std::nullopt;
-    // Get error associated with tradeId (result.first)
-    auto e = errors_.find(result.first);
-    // If it actually returns something, get the error
-    if (e != errors_.end()) {
-      error = e->second;
-    }
-    items_.push_back(ScalarResult(result.first, result.second, error));
-  }
-
-  // 3. Now add ones with just an error (no result)
-  for (const auto &error : errors_) {
-    if (results_.find(error.first) == results_.end()) {
-      items_.push_back(ScalarResult(error.first, std::nullopt, error.second));
-    }
-  }
-
-  return Iterator(items_.begin());
+  return Iterator(results_.begin(), results_.end(), errors_.begin(),
+                  errors_.end());
 }
 
 ScalarResults::Iterator ScalarResults::end() const {
-  return Iterator(items_.end());
+  return Iterator(results_.end(), results_.end(), errors_.end(), errors_.end());
 }
