@@ -1,9 +1,9 @@
-#include "../Models/ScalarResults.h"
-#include "../RiskSystem/ParallelPricer.h"
-#include "../RiskSystem/ScreenResultPrinter.h"
-#include "../RiskSystem/SerialPricer.h"
 #include "../RiskSystem/SerialTradeLoader.h"
 #include "../RiskSystem/StreamingTradeLoader.h"
+#include "../Models/ScalarResults.h"
+#include "../RiskSystem/SerialPricer.h"
+#include "../RiskSystem/ParallelPricer.h"
+#include "../RiskSystem/ScreenResultPrinter.h"
 #include <iostream>
 #include <string>
 
@@ -15,33 +15,33 @@
 #include <unistd.h>
 
 int _getch() {
-  struct termios oldt, newt;
-  int ch;
-  tcgetattr(STDIN_FILENO, &oldt);
-  newt = oldt;
-  newt.c_lflag &= ~(ICANON | ECHO);
-  tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-  ch = getchar();
-  tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
-  return ch;
+    struct termios oldt, newt;
+    int ch;
+    tcgetattr(STDIN_FILENO, &oldt);
+    newt = oldt;
+    newt.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+    ch = getchar();
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+    return ch;
 }
 #endif
 
 int main(int argc, char *argv[]) {
-  ScalarResults results;
-  SerialTradeLoader tradeLoader;
-  auto allTrades = tradeLoader.loadTrades();
-  //   StreamingTradeLoader streamer;
-  //   streamer.loadAndPrice(&results);
+    ScalarResults results;
+    SerialTradeLoader tradeLoader;
+    auto allTrades = tradeLoader.loadTrades();
+    //   StreamingTradeLoader streamer;
+    //   streamer.loadAndPrice(&results);
 
-  ParallelPricer pricer;
-  pricer.price(allTrades, &results);
+    ParallelPricer pricer;
+    pricer.price(allTrades, &results);
 
-  ScreenResultPrinter screenPrinter;
-  screenPrinter.printResults(results);
+    ScreenResultPrinter screenPrinter;
+    screenPrinter.printResults(results);
 
-  std::cout << "Press any key to exit.." << std::endl;
-  _getch();
+    std::cout << "Press any key to exit.." << std::endl;
+    _getch();
 
-  return 0;
+    return 0;
 }
