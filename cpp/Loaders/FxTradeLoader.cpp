@@ -23,17 +23,17 @@ std::unique_ptr<FxTrade> FxTradeLoader::createTradeFromLine(std::string line) {
       std::make_unique<FxTrade>(items[8], items[0]);
 
   std::tm tm = {};
-
   std::istringstream tradeDateStream(items[1]);
   tradeDateStream >> std::get_time(&tm, "%Y-%m-%d");
   auto tradeTimePoint =
       std::chrono::system_clock::from_time_t(std::mktime(&tm));
   trade->setTradeDate(tradeTimePoint);
 
+  std::tm tm2 = {};
   std::istringstream valueDateStream(items[6]);
-  valueDateStream >> std::get_time(&tm, "%Y-%m-%d");
+  valueDateStream >> std::get_time(&tm2, "%Y-%m-%d");
   auto valueTimePoint =
-      std::chrono::system_clock::from_time_t(std::mktime(&tm));
+      std::chrono::system_clock::from_time_t(std::mktime(&tm2));
   trade->setValueDate(valueTimePoint);
 
   trade->setInstrument(items[2] + items[3]);

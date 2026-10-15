@@ -44,8 +44,8 @@ private:
 
   Random random_;
 
-  static std::map<std::string, std::string> &getTradesToError();
-  static std::map<std::string, std::string> &getTradesToWarn();
+  static const std::map<std::string, std::string> &getTradesToError();
+  static const std::map<std::string, std::string> &getTradesToWarn();
 };
 
 #endif // BASEPRICINGENGINE_H

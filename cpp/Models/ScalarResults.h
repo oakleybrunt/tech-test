@@ -21,8 +21,6 @@ public:
   virtual void addError(const std::string &tradeId,
                         const std::string &error) override;
 
-  void buildItems() const;
-
   class Iterator {
   public:
     using iterator_category = std::forward_iterator_tag;

@@ -41,7 +41,7 @@ void BasePricingEngine::priceTrade(const ITrade &trade,
     return;
   }
 
-  std::cout << "Started pricing trade: " << trade.getTradeId() << std::endl;
+  std::cout << ("Started pricing trade: " + trade.getTradeId() + "\n");
   std::this_thread::sleep_for(std::chrono::milliseconds(delay_));
   double result = calculateResult();
 
@@ -49,16 +49,16 @@ void BasePricingEngine::priceTrade(const ITrade &trade,
   auto &tradesToError = getTradesToError();
   auto &tradesToWarn = getTradesToWarn();
 
-  if (tradesToError.find(tradeId) != tradesToError.end()) {
-    resultReceiver->addError(tradeId, tradesToError[tradeId]);
+  if (auto error = tradesToError.find(tradeId); error != tradesToError.end()) {
+    resultReceiver->addError(tradeId, error->second);
   } else {
     resultReceiver->addResult(tradeId, result);
-    if (tradesToWarn.find(tradeId) != tradesToWarn.end()) {
-      resultReceiver->addError(tradeId, tradesToWarn[tradeId]);
+    if (auto warn = tradesToWarn.find(tradeId); warn != tradesToWarn.end()) {
+      resultReceiver->addError(tradeId, warn->second);
     }
   }
 
-  std::cout << "Completed pricing trade: " << trade.getTradeId() << std::endl;
+  std::cout << ("Completed pricing trade: " + trade.getTradeId() + '\n');
 }
 
 double BasePricingEngine::calculateResult() {
@@ -73,22 +73,15 @@ double BasePricingEngine::Random::nextDouble() {
          static_cast<double>(std::numeric_limits<unsigned int>::max());
 }
 
-std::map<std::string, std::string> &BasePricingEngine::getTradesToError() {
-  static std::map<std::string, std::string> tradesToError;
-  static bool initialized = false;
-  if (!initialized) {
-    tradesToError["GOV006"] = "Undefined error in pricing";
-    initialized = true;
-  }
+const std::map<std::string, std::string> &
+BasePricingEngine::getTradesToError() {
+  static const std::map<std::string, std::string> tradesToError = {
+      {"GOV006", "Undefined error in pricing"}};
   return tradesToError;
 }
 
-std::map<std::string, std::string> &BasePricingEngine::getTradesToWarn() {
-  static std::map<std::string, std::string> tradesToWarn;
-  static bool initialized = false;
-  if (!initialized) {
-    tradesToWarn["FWD001"] = "Unable to calibrate model to value date";
-    initialized = true;
-  }
+const std::map<std::string, std::string> &BasePricingEngine::getTradesToWarn() {
+  static const std::map<std::string, std::string> tradesToWarn = {
+      {"FWD001", "Unable to calibrate model to value date"}};
   return tradesToWarn;
 }

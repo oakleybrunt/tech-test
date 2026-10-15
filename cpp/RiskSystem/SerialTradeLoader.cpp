@@ -25,7 +25,7 @@ SerialTradeLoader::loadTrades() {
   std::vector<std::vector<std::unique_ptr<ITrade>>> result;
 
   for (auto &loader : loaders) {
-    result.push_back(std::move(loader->loadTrades()));
+    result.push_back(loader->loadTrades());
   }
 
   return result;

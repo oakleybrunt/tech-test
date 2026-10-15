@@ -4,7 +4,7 @@
 #include "../Pricers/GovBondPricingEngine.h"
 #include <stdexcept>
 
-SerialPricer::~SerialPricer() {};
+SerialPricer::~SerialPricer() {}
 
 void SerialPricer::loadPricers() {
   // instantiates each of the required types of pricing engines based on the
