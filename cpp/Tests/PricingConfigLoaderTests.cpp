@@ -1,8 +1,8 @@
-#include "../Models/BondTrade.h"
-#include "../Models/FxTrade.h"
+#include "TestFramework.h"
 #include "../RiskSystem/PricingConfigLoader.h"
 #include "../RiskSystem/PricingEngineConfig.h"
-#include "TestFramework.h"
+#include "../Models/BondTrade.h"
+#include "../Models/FxTrade.h"
 #include <memory>
 
 static std::unique_ptr<PricingEngineConfig> config;

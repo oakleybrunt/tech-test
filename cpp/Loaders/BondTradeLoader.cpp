@@ -9,9 +9,9 @@
 
 std::unique_ptr<BondTrade>
 BondTradeLoader::createTradeFromLine(std::string line) {
-  std::vector<std::string> items;
-  std::stringstream ss(line);
-  std::string item;
+    std::vector<std::string> items;
+    std::stringstream ss(line);
+    std::string item;
 
     while (std::getline(ss, item, separator)) {
         rm_cntrlchars(item);

@@ -11,14 +11,14 @@
 
 class SerialPricer {
 private:
-  std::map<std::string, std::unique_ptr<IPricingEngine>> pricers_;
-  void loadPricers();
+    std::map<std::string, std::unique_ptr<IPricingEngine>> pricers_;
+    void loadPricers();
 
 public:
-  ~SerialPricer();
-  void price(
-      const std::vector<std::vector<std::unique_ptr<ITrade>>> &tradeContainers,
-      IScalarResultReceiver *resultReceiver);
+    ~SerialPricer();
+    void price(
+        const std::vector<std::vector<std::unique_ptr<ITrade>>> &tradeContainers,
+        IScalarResultReceiver *resultReceiver);
 };
 
 #endif // SERIALPRICER_H

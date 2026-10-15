@@ -2,29 +2,29 @@
 #define PARALLELPRICER_H
 
 #include "../Models/IPricingEngine.h"
-#include "../Models/IScalarResultReceiver.h"
 #include "../Models/ITrade.h"
+#include "../Models/IScalarResultReceiver.h"
 #include "PricingConfigLoader.h"
-#include <future>
 #include <map>
-#include <mutex>
+#include <vector>
 #include <string>
 #include <thread>
-#include <vector>
+#include <mutex>
+#include <future>
 
 class ParallelPricer {
 private:
-  std::map<std::string, std::unique_ptr<IPricingEngine>> pricers_;
-  std::mutex resultMutex_;
+    std::map<std::string, std::unique_ptr<IPricingEngine>> pricers_;
+    std::mutex resultMutex_;
 
-  void loadPricers();
+    void loadPricers();
 
 public:
-  ~ParallelPricer();
+    ~ParallelPricer();
 
-  void price(
-      const std::vector<std::vector<std::unique_ptr<ITrade>>> &tradeContainers,
-      IScalarResultReceiver *resultReceiver);
-};
+    void price(
+        const std::vector<std::vector<std::unique_ptr<ITrade>>> &tradeContainers,
+        IScalarResultReceiver *resultReceiver);
+    };
 
 #endif // PARALLELPRICER_H
